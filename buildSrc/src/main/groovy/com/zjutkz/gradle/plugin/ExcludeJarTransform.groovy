@@ -74,7 +74,7 @@ class ExcludeJarTransform extends Transform {
         transformInvocation.inputs.forEach { TransformInput input ->
             input.jarInputs.forEach { JarInput jarInput ->
                 if (!transformInvocation.incremental) {
-                    File targetJar = outputProvider.getContentLocation(jarInput.name, jarInput.contentTypes, jarInput.scopes, Format.JAR)
+                    File targetJar = outputProvider.getContentLocation(jarInput.file.toString(), jarInput.contentTypes, jarInput.scopes, Format.JAR)
                     excludeFilesFromJar(jarInput.file, targetJar)
                 } else {
                     switch(jarInput.status) {
@@ -82,18 +82,18 @@ class ExcludeJarTransform extends Transform {
                             break;
                         case Status.ADDED:
                         case Status.CHANGED:
-                            File targetJar = outputProvider.getContentLocation(jarInput.name, jarInput.contentTypes, jarInput.scopes, Format.JAR)
+                            File targetJar = outputProvider.getContentLocation(jarInput.file.toString(), jarInput.contentTypes, jarInput.scopes, Format.JAR)
                             excludeFilesFromJar(jarInput.file, targetJar)
                             break;
                         case Status.REMOVED:
-                            File outJarFile = outputProvider.getContentLocation(jarInput.name, jarInput.contentTypes, jarInput.scopes, Format.JAR)
+                            File outJarFile = outputProvider.getContentLocation(jarInput.file.toString(), jarInput.contentTypes, jarInput.scopes, Format.JAR)
                             FileUtils.deleteIfExists(outJarFile)
                             break;
                     }
                 }
             }
             input.directoryInputs.forEach { DirectoryInput directoryInput ->
-                File targetDir = outputProvider.getContentLocation(directoryInput.name, directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY)
+                File targetDir = outputProvider.getContentLocation(directoryInput.file.toString(), directoryInput.contentTypes, directoryInput.scopes, Format.DIRECTORY)
                 if (targetDir.exists()) {
                     FileUtils.deleteDirectoryContents(targetDir)
                 }
